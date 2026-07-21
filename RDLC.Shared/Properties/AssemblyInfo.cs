@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RDLC.ReportGeneration")]
+[assembly: AssemblyTitle("RDLC.Shared")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("RDLC.ReportGeneration")]
+[assembly: AssemblyProduct("RDLC.Shared")]
 [assembly: AssemblyCopyright("Copyright ©  2026")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1c24621c-b01a-46ee-8afa-8c0f9ae62d30")]
+[assembly: Guid("c27597fe-17ab-415f-8376-6bba7b015894")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -1,7 +1,7 @@
 ﻿using RDLC.Infrastructure;
 using RDLC.Models;
-using System.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
 
 namespace RDLC.Services
 {
@@ -9,7 +9,7 @@ namespace RDLC.Services
     {
         public Task<GenerateReportResponse> GenerateReport(GenerateReportRequest request)
         {
-          throw new NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Reporting.Map.WebForms.BingMaps;
+using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 
@@ -41,9 +43,17 @@ namespace RDLC.WebForms
                         memory.Seek(0, SeekOrigin.Begin);
 
                         rptViewer.LocalReport.LoadReportDefinition(memory);
-
-                        rptViewer.LocalReport.Refresh();
                     }
+
+                    using (var adapter = new Shared.StoredProceduresTableAdapters.Users_ListTableAdapter())
+                    {
+                        using (var table = adapter.GetData() as DataTable)
+                        {
+                            rptViewer.LocalReport.DataSources.Add(new ReportDataSource("Users_List", table));
+                        }
+                    }
+
+                    rptViewer.LocalReport.Refresh();
                 }
             }
         }

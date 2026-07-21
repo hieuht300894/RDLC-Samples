@@ -5,17 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Reports\Empty.rdlc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Users.rdlc">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\RDLC.Infrastructure\RDLC.Infrastructure.csproj" />
     <ProjectReference Include="..\RDLC.Services\RDLC.Services.csproj" />
+    <ProjectReference Include="..\RDLC.Shared\RDLC.Shared.csproj" />
   </ItemGroup>
 
 </Project>

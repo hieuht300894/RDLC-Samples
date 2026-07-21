@@ -28,7 +28,7 @@ namespace RDLC.Pages
         {
             var requestData = new Dictionary<string, string>
             {
-                { "ReportContent", Convert.ToBase64String(await System.IO.File.ReadAllBytesAsync("Reports/Sample.rdlc")) },
+                { "ReportContent", Convert.ToBase64String(await System.IO.File.ReadAllBytesAsync("bin/Debug/net8.0/Reports/Users.rdlc")) },
             };
 
             using (var client =new HttpClient())
