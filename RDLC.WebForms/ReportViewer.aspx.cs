@@ -33,24 +33,40 @@ namespace RDLC.WebForms
 
             if (Request.RequestType.Equals("GET", StringComparison.OrdinalIgnoreCase) && Request.QueryString.HasKeys())
             {
-                var allKeys = new HashSet<string>(Request.QueryString.Keys.OfType<string>(), StringComparer.OrdinalIgnoreCase);
-                if (allKeys.Contains("report_id"))
-                {
-                    var reportId = string.Format("{0}", Request.QueryString["report_id"]);
+                var reportId = string.Format("{0}", Request.QueryString["report_id"]);
 
-                    using (var memory = new MemoryStream(Convert.FromBase64String(_reportContents[reportId])))
+                if (_reportContents.TryGetValue(reportId, out var reportContent))
+                {
+                    _reportContents.Remove(reportId);
+
+                    using (var memory = new MemoryStream(Convert.FromBase64String(reportContent)))
                     {
                         memory.Seek(0, SeekOrigin.Begin);
 
                         rptViewer.LocalReport.LoadReportDefinition(memory);
                     }
 
-                    using (var adapter = new Shared.StoredProceduresTableAdapters.Users_ListTableAdapter())
+                    using (var table = new DataTable())
                     {
-                        using (var table = adapter.GetData() as DataTable)
+                        var columnId = new DataColumn("Id", typeof(int));
+                        var columnName = new DataColumn("Name", typeof(string));
+                        var columnFullName = new DataColumn("FullName", typeof(string));
+                        var columnIsActive = new DataColumn("IsActive", typeof(bool));
+
+                        table.Columns.AddRange(new DataColumn[] { columnId, columnName, columnFullName, columnIsActive });
+
+                        for (int i = 0; i < 100; i++)
                         {
-                            rptViewer.LocalReport.DataSources.Add(new ReportDataSource("Users_List", table));
+                            var newRow = table.NewRow();
+                            newRow[columnId] = i + 1;
+                            newRow[columnName] = Guid.NewGuid();
+                            newRow[columnFullName] = Guid.NewGuid();
+                            newRow[columnIsActive] = true;
+
+                            table.Rows.Add(newRow);
                         }
+
+                        rptViewer.LocalReport.DataSources.Add(new ReportDataSource("Users_List", table));
                     }
 
                     rptViewer.LocalReport.Refresh();

@@ -6,18 +6,18 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>5.13701cm</Width>
+              <Width>6.3354cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>5.13701cm</Width>
+              <Width>6.3354cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>5.13701cm</Width>
+              <Width>6.3354cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>1.5525cm</Height>
+              <Height>0.70425cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -112,7 +112,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>1.5525cm</Height>
+              <Height>0.70425cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -226,18 +226,89 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>Users_List</DataSetName>
-        <Top>1.08162cm</Top>
-        <Left>2.27224cm</Left>
-        <Height>3.105cm</Height>
-        <Width>15.41103cm</Width>
+        <Top>0.29104cm</Top>
+        <Left>0.47625cm</Left>
+        <Height>1.4085cm</Height>
+        <Width>19.0062cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
         </Style>
       </Tablix>
+      <Textbox Name="Textbox4">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="*" + Format(Now, "HHmmss") + "*"</Value>
+                <Style>
+                  <FontFamily>3 of 9 Barcode</FontFamily>
+                  <FontSize>36pt</FontSize>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox4</rd:DefaultName>
+        <Top>7.85495cm</Top>
+        <Left>0cm</Left>
+        <Height>1.76417cm</Height>
+        <Width>19.9587cm</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox6">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Format(Now, "HHmmss")</Value>
+                <Style>
+                  <FontSize>36pt</FontSize>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox4</rd:DefaultName>
+        <Top>4.99801cm</Top>
+        <Left>0cm</Left>
+        <Height>1.76417cm</Height>
+        <Width>19.9587cm</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <VerticalAlign>Middle</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
     </ReportItems>
-    <Height>5.08cm</Height>
+    <Height>17.91229cm</Height>
     <Style />
   </Body>
   <Width>19.9587cm</Width>
