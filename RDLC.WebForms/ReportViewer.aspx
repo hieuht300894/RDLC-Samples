@@ -9,14 +9,12 @@
     <title></title>
 </head>
 <body>
-    <h5>Report Viewer</h5>
-
     <form id="form1" runat="server">
         <!-- The ScriptManager must be declared before the ReportViewer -->
         <asp:ScriptManager ID="ScriptManager1" runat="server" />
 
         <!-- Your ReportViewer Control -->
-        <rdlc:ReportViewer ID="rptViewer" runat="server" Width="100%" Height="600px" AsyncRendering="true" ProcessingMode="Local">
+        <rdlc:ReportViewer ID="rptViewer" runat="server" Width="100%" AsyncRendering="true" ProcessingMode="Local">
             <LocalReport></LocalReport>
         </rdlc:ReportViewer>
     </form>
