@@ -55,10 +55,10 @@ namespace RDLC.WebForms
 
                         table.Columns.AddRange(new DataColumn[] { columnId, columnName, columnFullName, columnIsActive });
 
-                        for (int i = 0; i < 100; i++)
+                        for (int i = 0; i < 5; i++)
                         {
                             var newRow = table.NewRow();
-                            newRow[columnId] = i + 1;
+                            newRow[columnId] = Convert.ToInt32(DateTime.Now.ToString("HHmmss"));
                             newRow[columnName] = Guid.NewGuid();
                             newRow[columnFullName] = Guid.NewGuid();
                             newRow[columnIsActive] = true;
