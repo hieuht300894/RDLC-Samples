@@ -5,7 +5,10 @@ using RDLC.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace RDLC.Pages
 {
@@ -31,13 +34,31 @@ namespace RDLC.Pages
                 { "ReportContent", Convert.ToBase64String(await System.IO.File.ReadAllBytesAsync("bin/Debug/net8.0/Reports/Users.rdlc")) },
             };
 
-            using (var client =new HttpClient())
+            using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:5002/");
 
                 using (var request = new HttpRequestMessage(HttpMethod.Post, "ReportViewer.aspx"))
                 {
                     request.Content = new FormUrlEncodedContent(requestData);
+
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            ReportId = await response.Content.ReadAsStringAsync();
+                        }
+                    }
+                }
+            }
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:5002/");
+
+                using (var request = new HttpRequestMessage(HttpMethod.Post, "ReportViewer.aspx"))
+                {
+                    request.Content = new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8, "application/json");
 
                     using (var response = await client.SendAsync(request))
                     {
