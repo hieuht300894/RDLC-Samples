@@ -1,4 +1,6 @@
 ﻿using Microsoft.Reporting.WebForms;
+using Newtonsoft.Json;
+using RDLC.WebForms.Models;
 using RDLC.WebForms.Services;
 using System;
 using System.Collections.Generic;
@@ -6,6 +8,8 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices.ComTypes;
+using System.Xml.Linq;
 
 namespace RDLC.WebForms
 {
@@ -30,23 +34,11 @@ namespace RDLC.WebForms
 
         private void HandlePostRequest()
         {
-            if (!MediaTypeHeaderValue.TryParse(string.Format("{0}", Request.ContentType).Trim(), out var parsedHeader))
+            var serializer = new JsonSerializer();
+            using (var inputReader = new StreamReader(Request.InputStream))
+            using (var jsonReader = new JsonTextReader(inputReader))
             {
-                return;
-            }
-
-            var mediaType = string.Format("{0}", parsedHeader.MediaType).Trim().ToLower();
-
-            switch (mediaType)
-            {
-                case "application/x-www-form-urlencoded":
-                    ProcessFormContent();
-                    break;
-                case "application/json":
-                    ProcessJsonContent();
-                    break;
-                default:
-                    break;
+                var reportContent = serializer.Deserialize<ReportInfo>(jsonReader);
             }
         }
 

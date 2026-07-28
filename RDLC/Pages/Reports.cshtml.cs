@@ -1,32 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using RDLC.Infrastructure;
-using RDLC.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace RDLC.Pages
 {
     public class ReportsModel : PageModel
     {
-        private readonly ILogger _logger;
-        private readonly IReportService _reportService;
-        private readonly AppData _appData;
-
         public string ReportId { get; set; }
-
-        public ReportsModel(ILogger<ReportsModel> logger, IReportService reportService, AppData appData)
-        {
-            _logger = logger;
-            _reportService = reportService;
-            _appData = appData;
-        }
 
         public async Task OnGet()
         {
@@ -49,6 +33,8 @@ namespace RDLC.Pages
                         multipartContent.Add(new StreamContent(new FileStream(Path.Combine(currentFolderName, reportInfo.FileName), FileMode.Open, FileAccess.Read)), reportInfo.FileName);
 
                         multipartContent.Add(new StringContent(JsonSerializer.Serialize(reportInfo), Encoding.UTF8, "application/json"));
+
+                        request.Content = multipartContent;
 
                         using (var response = await client.SendAsync(request))
                         {
