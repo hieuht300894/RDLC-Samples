@@ -4,6 +4,7 @@ using RDLC.Infrastructure;
 using RDLC.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -29,9 +30,12 @@ namespace RDLC.Pages
 
         public async Task OnGet()
         {
-            var requestData = new Dictionary<string, string>
+            var currentFolderName = "bin/Debug/net8.0/Reports";
+
+            var reportInfo = new
             {
-                { "ReportContent", Convert.ToBase64String(await System.IO.File.ReadAllBytesAsync("bin/Debug/net8.0/Reports/Users.rdlc")) },
+                ReportId = Guid.NewGuid(),
+                FileName = "Users.rdlc",
             };
 
             using (var client = new HttpClient())
@@ -40,31 +44,18 @@ namespace RDLC.Pages
 
                 using (var request = new HttpRequestMessage(HttpMethod.Post, "ReportViewer.aspx"))
                 {
-                    request.Content = new FormUrlEncodedContent(requestData);
-
-                    using (var response = await client.SendAsync(request))
+                    using (var multipartContent = new MultipartFormDataContent())
                     {
-                        if (response.IsSuccessStatusCode)
+                        multipartContent.Add(new StreamContent(new FileStream(Path.Combine(currentFolderName, reportInfo.FileName), FileMode.Open, FileAccess.Read)), reportInfo.FileName);
+
+                        multipartContent.Add(new StringContent(JsonSerializer.Serialize(reportInfo), Encoding.UTF8, "application/json"));
+
+                        using (var response = await client.SendAsync(request))
                         {
-                            ReportId = await response.Content.ReadAsStringAsync();
-                        }
-                    }
-                }
-            }
-
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("http://localhost:5002/");
-
-                using (var request = new HttpRequestMessage(HttpMethod.Post, "ReportViewer.aspx"))
-                {
-                    request.Content = new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8, "application/json");
-
-                    using (var response = await client.SendAsync(request))
-                    {
-                        if (response.IsSuccessStatusCode)
-                        {
-                            ReportId = await response.Content.ReadAsStringAsync();
+                            if (response.IsSuccessStatusCode)
+                            {
+                                ReportId = await response.Content.ReadAsStringAsync();
+                            }
                         }
                     }
                 }
