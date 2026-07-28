@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 using System.Xml.Linq;
 
 namespace RDLC.WebForms
@@ -22,6 +23,11 @@ namespace RDLC.WebForms
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (IsPostBack)
+            {
+                return;
+            }
+
             if (Request.RequestType.Equals("POST", StringComparison.OrdinalIgnoreCase))
             {
                 HandlePostRequest();
@@ -64,34 +70,6 @@ namespace RDLC.WebForms
             Response.End();
         }
 
-        private void ProcessFormContent()
-        {
-            var allKeys = new HashSet<string>(Request.Form.AllKeys ?? Array.Empty<string>(), StringComparer.OrdinalIgnoreCase);
-            if (!allKeys.Contains("ReportContent"))
-            {
-                return;
-            }
-
-            var reportContent = Request.Form.Get("ReportContent");
-            if (string.IsNullOrWhiteSpace(reportContent))
-            {
-                return;
-            }
-
-            var reportId = Guid.NewGuid().ToString();
-
-            _cacheService.SetData(reportId, reportContent);
-
-            Response.Clear();
-            Response.Write(reportId);
-            Response.End();
-        }
-
-        private void ProcessJsonContent()
-        {
-            throw new NotImplementedException();
-        }
-
         private void HandleGetRequest()
         {
             var allKeys = new HashSet<string>(Request.QueryString.AllKeys ?? Array.Empty<string>(), StringComparer.OrdinalIgnoreCase);
@@ -100,9 +78,9 @@ namespace RDLC.WebForms
                 return;
             }
 
-            var reportContent = _cacheService.GetData(string.Format("{0}", Request.QueryString["id"]));
+            var reportContent = string.Format("{0}", _cacheService.GetData(string.Format("{0}", Request.QueryString["id"])));
 
-            using (var memory = new MemoryStream(Convert.FromBase64String(string.Format("{0}", reportContent))))
+            using (var memory = new MemoryStream(Encoding.UTF8.GetBytes(reportContent)))
             {
                 memory.Seek(0, SeekOrigin.Begin);
 
