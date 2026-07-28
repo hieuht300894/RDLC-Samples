@@ -1,4 +1,6 @@
-﻿using Microsoft.Reporting.WebForms;
+﻿using Microsoft.Reporting.Map.WebForms.BingMaps;
+using Microsoft.Reporting.WebForms;
+using Microsoft.ReportingServices.Interfaces;
 using Newtonsoft.Json;
 using RDLC.WebForms.Models;
 using RDLC.WebForms.Services;
@@ -7,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices.ComTypes;
 using System.Xml.Linq;
@@ -15,7 +18,7 @@ namespace RDLC.WebForms
 {
     public partial class ReportViewer : System.Web.UI.Page
     {
-        private  readonly CacheService _cacheService = new CacheService();
+        private readonly CacheService _cacheService = new CacheService();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -34,12 +37,31 @@ namespace RDLC.WebForms
 
         private void HandlePostRequest()
         {
-            var serializer = new JsonSerializer();
-            using (var inputReader = new StreamReader(Request.InputStream))
-            using (var jsonReader = new JsonTextReader(inputReader))
+            try
             {
-                var reportContent = serializer.Deserialize<ReportInfo>(jsonReader);
+                var reportInfo = new ReportInfo
+                {
+                    ReportId = Request.Form[nameof(ReportInfo.ReportId)],
+                    FileName = Request.Form[nameof(ReportInfo.FileName)],
+                };
+
+                using (var reader = new StreamReader(Request.Files[reportInfo.ReportId].InputStream))
+                {
+                    _cacheService.SetData(reportInfo.ReportId, reader.ReadToEnd());
+                }
+
+                Response.Clear();
+                Response.Write(reportInfo.ReportId);
             }
+            catch (Exception ex)
+            {
+                Response.Clear();
+                Response.Write(ex);
+
+                Response.StatusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
+            }
+
+            Response.End();
         }
 
         private void ProcessFormContent()
@@ -67,7 +89,7 @@ namespace RDLC.WebForms
 
         private void ProcessJsonContent()
         {
-           throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private void HandleGetRequest()

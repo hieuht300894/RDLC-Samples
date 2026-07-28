@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RDLC.Infrastructure\RDLC.Infrastructure.csproj" />
     <ProjectReference Include="..\RDLC.Services\RDLC.Services.csproj" />
     <ProjectReference Include="..\RDLC.Shared\RDLC.Shared.csproj" />

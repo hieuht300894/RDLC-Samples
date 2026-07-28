@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RDLC.Pages
@@ -14,11 +15,10 @@ namespace RDLC.Pages
 
         public async Task OnGet()
         {
-            var currentFolderName = "bin/Debug/net8.0/Reports";
-
             var reportInfo = new
             {
-                ReportId = Guid.NewGuid(),
+                ReportId = Guid.NewGuid().ToString(),
+                FolderName = "bin/Debug/net8.0/Reports",
                 FileName = "Users.rdlc",
             };
 
@@ -28,20 +28,25 @@ namespace RDLC.Pages
 
                 using (var request = new HttpRequestMessage(HttpMethod.Post, "ReportViewer.aspx"))
                 {
-                    using (var multipartContent = new MultipartFormDataContent())
+                    var multipartContent = new MultipartFormDataContent
                     {
-                        multipartContent.Add(new StreamContent(new FileStream(Path.Combine(currentFolderName, reportInfo.FileName), FileMode.Open, FileAccess.Read)), reportInfo.FileName);
+                        { new StringContent(reportInfo.ReportId), nameof(reportInfo.ReportId) },
+                        { new StringContent(reportInfo.FileName), nameof(reportInfo.FileName) }
+                    };
 
-                        multipartContent.Add(new StringContent(JsonSerializer.Serialize(reportInfo), Encoding.UTF8, "application/json"));
+                    var fileStream = new FileStream(Path.Combine(reportInfo.FolderName, reportInfo.FileName), FileMode.Open, FileAccess.Read);
+                    var fileContent = new StreamContent(fileStream);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
-                        request.Content = multipartContent;
+                    multipartContent.Add(fileContent, reportInfo.ReportId, reportInfo.FileName);
 
-                        using (var response = await client.SendAsync(request))
+                    request.Content = multipartContent;
+
+                    using (var response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
                         {
-                            if (response.IsSuccessStatusCode)
-                            {
-                                ReportId = await response.Content.ReadAsStringAsync();
-                            }
+                            ReportId = await response.Content.ReadAsStringAsync();
                         }
                     }
                 }
