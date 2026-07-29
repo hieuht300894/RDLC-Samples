@@ -1,19 +1,10 @@
-﻿using Microsoft.Reporting.Map.WebForms.BingMaps;
-using Microsoft.Reporting.WebForms;
-using Microsoft.ReportingServices.Interfaces;
-using Newtonsoft.Json;
-using RDLC.WebForms.Models;
+﻿using RDLC.WebForms.Models;
 using RDLC.WebForms.Services;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
-using System.Xml.Linq;
 
 namespace RDLC.WebForms
 {

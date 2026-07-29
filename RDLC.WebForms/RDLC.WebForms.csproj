@@ -116,6 +116,7 @@
     </Compile>
     <Compile Include="Models\ReportInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\BarcodeReport.cs" />
     <Compile Include="Reports\UsersReport.cs" />
     <Compile Include="ReportViewer.aspx.cs">
       <DependentUpon>ReportViewer.aspx</DependentUpon>
@@ -125,7 +126,7 @@
       <DependentUpon>ReportViewer.aspx</DependentUpon>
     </Compile>
     <Compile Include="Services\CacheService.cs" />
-    <Compile Include="Reports\IReport.cs" />
+    <Compile Include="Reports\IBaseReport.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
   </ItemGroup>
   <ItemGroup>
