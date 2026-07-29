@@ -4,6 +4,14 @@
     ViewData["Title"] = "Report";
 }
 
+@{
+    var finalUrl = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString("http://localhost:5002/ReportViewer.aspx", new Dictionary<string, string>
+    {
+        { "id", Model.ReportId },
+        { "name", Model.ReportName },
+    });
+}
+
 <div class="content content-full">
     <div class="block">
         <div class="block-header border-bottom">
@@ -12,7 +20,7 @@
         <div class="block-content">
             <div class="row">
                 <div class="col-sm-12 text-center">
-                    <iframe class="vh-100 w-100" title="Embedded Content" src="http://localhost:5002/ReportViewer.aspx?id=@(Model.ReportId)&name=@(Model.ReportName)" allowfullscreen></iframe>
+                    <iframe class="vh-100 w-100" title="Embedded Content" src="@finalUrl" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
