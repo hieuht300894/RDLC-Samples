@@ -18,7 +18,8 @@ namespace RDLC.Pages
             {
                 ReportId = Guid.NewGuid().ToString(),
                 FolderName = "bin/Debug/net8.0/Templates/Reports",
-                FileName = "User.rdlc",
+                //FileName = "User.rdlc",
+                FileName = "Barcode.rdlc",
             };
 
             using (var client = new HttpClient())

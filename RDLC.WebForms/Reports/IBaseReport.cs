@@ -41,13 +41,18 @@ namespace RDLC.WebForms.Services
     {
         public static IBaseReport Get(string reportName)
         {
-            switch (reportName)
+            var registeredReports = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase)
             {
-                case "user.rdlc":
-                    return new UsersReport();
-                default:
-                    throw new ArgumentException("Invalid report name");
+                { "User.rdlc", typeof(UsersReport) },
+                { "Barcode.rdlc", typeof(BarcodeReport) },
+            };
+
+            if (!registeredReports.TryGetValue(reportName, out var classType))
+            {
+                throw new ArgumentException("Invalid report name");
             }
+
+            return Activator.CreateInstance(classType) as IBaseReport;
         }
     }
 }
