@@ -62,7 +62,7 @@ namespace RDLC.WebForms
             catch (Exception ex)
             {
                 Response.Clear();
-                Response.Write(ex);
+                Response.Write(ex.Message);
 
                 Response.StatusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
             }
@@ -72,45 +72,29 @@ namespace RDLC.WebForms
 
         private void HandleGetRequest()
         {
+            var requiredKeys = new string[]
+            {
+                "id",
+                "name",
+            };
+
             var allKeys = new HashSet<string>(Request.QueryString.AllKeys ?? Array.Empty<string>(), StringComparer.OrdinalIgnoreCase);
-            if (!allKeys.Contains("id"))
+            if (!allKeys.IsSupersetOf(requiredKeys))
             {
                 return;
             }
 
-            var reportContent = string.Format("{0}", _cacheService.GetData(string.Format("{0}", Request.QueryString["id"])));
+            var reportId = string.Format("{0}", Request.QueryString["id"]).Trim().ToLower();
+            var reportName = string.Format("{0}", Request.QueryString["name"]).Trim().ToLower();
 
-            using (var memory = new MemoryStream(Encoding.UTF8.GetBytes(reportContent)))
+            var reportContent = string.Format("{0}", _cacheService.GetData(reportId));
+
+            using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(reportContent)))
             {
-                memory.Seek(0, SeekOrigin.Begin);
+                memoryStream.Seek(0, SeekOrigin.Begin);
 
-                rptViewer.LocalReport.LoadReportDefinition(memory);
+                ReportFactory.Get(reportName).BindData(rptViewer.LocalReport, memoryStream).Wait();
             }
-
-            using (var table = new DataTable())
-            {
-                var columnId = new DataColumn("Id", typeof(int));
-                var columnName = new DataColumn("Name", typeof(string));
-                var columnFullName = new DataColumn("FullName", typeof(string));
-                var columnIsActive = new DataColumn("IsActive", typeof(bool));
-
-                table.Columns.AddRange(new DataColumn[] { columnId, columnName, columnFullName, columnIsActive });
-
-                for (int i = 0; i < 5; i++)
-                {
-                    var newRow = table.NewRow();
-                    newRow[columnId] = Convert.ToInt32(DateTime.Now.ToString("HHmmss"));
-                    newRow[columnName] = Guid.NewGuid();
-                    newRow[columnFullName] = Guid.NewGuid();
-                    newRow[columnIsActive] = true;
-
-                    table.Rows.Add(newRow);
-                }
-
-                rptViewer.LocalReport.DataSources.Add(new ReportDataSource("Users_List", table));
-            }
-
-            rptViewer.LocalReport.Refresh();
         }
     }
 }

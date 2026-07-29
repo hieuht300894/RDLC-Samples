@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RDLC.Pages
@@ -12,14 +10,15 @@ namespace RDLC.Pages
     public class ReportsModel : PageModel
     {
         public string ReportId { get; set; }
+        public string ReportName { get; set; }
 
         public async Task OnGet()
         {
             var reportInfo = new
             {
                 ReportId = Guid.NewGuid().ToString(),
-                FolderName = "bin/Debug/net8.0/Reports",
-                FileName = "Users.rdlc",
+                FolderName = "bin/Debug/net8.0/Templates/Reports",
+                FileName = "User.rdlc",
             };
 
             using (var client = new HttpClient())
@@ -46,7 +45,8 @@ namespace RDLC.Pages
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            ReportId = await response.Content.ReadAsStringAsync();
+                            ReportId = reportInfo.ReportId;
+                            ReportName = reportInfo.FileName;
                         }
                     }
                 }

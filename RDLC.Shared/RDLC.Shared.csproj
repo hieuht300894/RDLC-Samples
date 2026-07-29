@@ -54,16 +54,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Reports\Empty.rdlc">
+    <EmbeddedResource Include="Templates\Reports\Empty.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Sample.rdlc">
+    <EmbeddedResource Include="Templates\Reports\Sample.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Barcode.rdlc">
+    <EmbeddedResource Include="Templates\Reports\Barcode.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Users.rdlc">
+    <EmbeddedResource Include="Templates\Reports\User.rdlc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
