@@ -4,6 +4,10 @@
     ViewData["Title"] = "Report";
 }
 
+@section Scripts {
+    <script src="~/js/reports.js" asp-append-version="true"></script>
+}
+
 <div class="content content-full">
     <div class="block">
         <div class="block-header border-bottom">
@@ -22,36 +26,10 @@
         <div class="block-content">
             <div class="row">
                 <div class="col-sm-12 text-center">
-                    <iframe class="vh-100 w-100" title="Embedded Content" src="http://localhost:5002/ReportViewer.aspx" allowfullscreen></iframe>
+                    <iframe id="ifrReport" class="vh-100 w-100" title="Embedded Content" src="http://localhost:5002/ReportViewer.aspx" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-    const url = new URL(document.querySelector('meta[name="current-page-path"]').content, location.origin);
-    url.searchParams.set('handler', 'SelectReport');
-
-    async function selectReport(element) {
-        url.searchParams.set('reportName', element.dataset.reportName);
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-XSRF-TOKEN': csrfToken
-            },
-        });
-
-        if (response.ok) {
-            const result = await response.json();
-
-            console.log(result);
-        } else {
-            alert('Failed to lock customer state context for this tab.');
-        }
-    }
-</script>
 
