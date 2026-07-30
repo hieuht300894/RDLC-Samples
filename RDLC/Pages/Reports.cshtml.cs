@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using RDLC.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -11,40 +13,55 @@ namespace RDLC.Pages
 {
     public class ReportsModel : PageModel
     {
-        public async Task<IActionResult> OnPostSelectReportAsync([FromBody] ReportInfo model)
+        private readonly AppSettings _appSettings;
+        private readonly AppData _appData;
+
+        public List<Report> Reports { get; } = [];
+
+        public ReportsModel(AppSettings appSettings, AppData appData)
         {
+            _appSettings = appSettings;
+            _appData = appData;
+        }
+
+        public Task OnGetAsync()
+        {
+            Reports.AddRange(_appData.Reports);
+
+            return Task.CompletedTask;
+        }
+
+        public async Task<IActionResult> OnPostReportAsync([FromBody] ReportInfo model)
+        {
+            var reportId = model.ReportId;
+
+            var report = _appData.Reports.Find(x => x.Id == reportId);
+            if (report == null)
+            {
+                return new BadRequestObjectResult("Report is not found.");
+            }
+
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:5002/");
+                client.BaseAddress = new Uri(_appSettings.ReportViewerUrl);
 
-                using (var request = new HttpRequestMessage(HttpMethod.Post, "ReportViewer.aspx"))
+                using (var request = new HttpRequestMessage(HttpMethod.Post, ""))
                 {
-                    var multipartContent = new MultipartFormDataContent
+                    request.Content = new StringContent(JsonConvert.SerializeObject(new
                     {
-                        { new StringContent(model.ReportId), nameof(ReportInfo.ReportId) },
-                        { new StringContent(model.ReportName), nameof(ReportInfo.ReportName) }
-                    };
-
-                    var fileStream = new FileStream(Path.Combine(model.FolderName, model.ReportName), FileMode.Open, FileAccess.Read);
-                    var fileContent = new StreamContent(fileStream);
-                    fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-
-                    multipartContent.Add(fileContent, model.ReportId, model.ReportName);
-
-                    request.Content = multipartContent;
+                        report.FileName
+                    }));
 
                     using (var response = await client.SendAsync(request))
                     {
+                        var result = await response.Content.ReadAsStringAsync();
+
                         if (response.IsSuccessStatusCode)
                         {
-                            return new OkObjectResult(new
-                            {
-                                model.ReportId,
-                                model.ReportName,
-                            });
+                            return new OkObjectResult(result);
                         }
 
-                        return new BadRequestObjectResult(await response.Content.ReadAsStringAsync());
+                        return new BadRequestObjectResult(result);
                     }
                 }
             }

@@ -1,7 +1,7 @@
 ﻿const requestToken = document.querySelector('meta[name="csrf-token"]').content;
 
 const url = new URL(document.querySelector('meta[name="current-page-path"]').content, location.origin);
-url.searchParams.set('handler', 'SelectReport');
+url.searchParams.set('handler', 'Report');
 
 const viewerUrl = new URL(document.querySelector('#ifrReport').src);
 
@@ -13,7 +13,7 @@ async function selectReport(element) {
             'RequestVerificationToken': requestToken,
         },
         body: JSON.stringify({
-            reportName: element.dataset.reportName
+            reportId: element.dataset.reportId
         }),
     });
 

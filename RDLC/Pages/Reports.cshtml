@@ -17,8 +17,10 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="list-group">
-                        <button type="button" class="list-group-item list-group-item-action" data-report-name="User.rdlc" onclick="selectReport(this)">User</button>
-                        <button type="button" class="list-group-item list-group-item-action" data-report-name="Barcode.rdlc" onclick="selectReport(this)">Barcode</button>
+                        @foreach (var item in Model.Reports)
+                        {
+                            <button type="button" class="list-group-item list-group-item-action" data-report-id="@item.Id" onclick="selectReport(this)">@item.Name</button>
+                        }
                     </div>
                 </div>
             </div>
