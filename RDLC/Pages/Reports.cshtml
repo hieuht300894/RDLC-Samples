@@ -30,15 +30,19 @@
 </div>
 
 <script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    const url = new URL(document.querySelector('meta[name="current-page-path"]').content, location.origin);
+    url.searchParams.set('handler', 'SelectReport');
+
     async function selectReport(element) {
-        const response = await fetch('?handler=SelectReport', {
+        url.searchParams.set('reportName', element.dataset.reportName);
+
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': csrfToken
             },
-            body: JSON.stringify({ 
-                reportName: element.dataset.reportName,
-            })
         });
 
         if (response.ok) {

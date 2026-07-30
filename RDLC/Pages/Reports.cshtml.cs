@@ -10,7 +10,7 @@ namespace RDLC.Pages
 {
     public class ReportsModel : PageModel
     {
-        public async Task<IActionResult> OnPostSelectReport([FromQuery(Name = "reportName")] string reportName)
+        public async Task<IActionResult> OnPostSelectReportAsync([FromQuery(Name = "reportName")] string reportName)
         {
             var reportInfo = new
             {
