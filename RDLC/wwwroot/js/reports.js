@@ -1,4 +1,4 @@
-﻿const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+﻿const requestToken = document.querySelector('meta[name="csrf-token"]').content;
 
 const url = new URL(document.querySelector('meta[name="current-page-path"]').content, location.origin);
 url.searchParams.set('handler', 'SelectReport');
@@ -6,13 +6,15 @@ url.searchParams.set('handler', 'SelectReport');
 const viewerUrl = new URL(document.querySelector('#ifrReport').src);
 
 async function selectReport(element) {
-    url.searchParams.set('reportName', element.dataset.reportName);
-
     const response = await fetch(url, {
-        method: 'GET',
+        method: 'POST',
         headers: {
-            'X-XSRF-TOKEN': csrfToken
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': requestToken,
         },
+        body: JSON.stringify({
+            reportName: element.dataset.reportName
+        }),
     });
 
     if (response.ok) {
