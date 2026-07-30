@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RDLC.Models
+﻿namespace RDLC.Models
 {
     public class ReportInfo
     {

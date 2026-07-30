@@ -47,10 +47,7 @@ namespace RDLC.Pages
 
                 using (var request = new HttpRequestMessage(HttpMethod.Post, ""))
                 {
-                    request.Content = new StringContent(JsonConvert.SerializeObject(new
-                    {
-                        report.FileName
-                    }));
+                    request.Content = new StringContent(JsonConvert.SerializeObject(report));
 
                     using (var response = await client.SendAsync(request))
                     {
