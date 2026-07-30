@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -9,17 +10,13 @@ namespace RDLC.Pages
 {
     public class ReportsModel : PageModel
     {
-        public string ReportId { get; set; }
-        public string ReportName { get; set; }
-
-        public async Task OnGet()
+        public async Task<IActionResult> OnPostSelectReport([FromQuery(Name = "reportName")] string reportName)
         {
             var reportInfo = new
             {
                 ReportId = Guid.NewGuid().ToString(),
                 FolderName = "bin/Debug/net8.0/Templates/Reports",
-                //FileName = "User.rdlc",
-                FileName = "Barcode.rdlc",
+                ReportName = reportName,
             };
 
             using (var client = new HttpClient())
@@ -31,14 +28,14 @@ namespace RDLC.Pages
                     var multipartContent = new MultipartFormDataContent
                     {
                         { new StringContent(reportInfo.ReportId), nameof(reportInfo.ReportId) },
-                        { new StringContent(reportInfo.FileName), nameof(reportInfo.FileName) }
+                        { new StringContent(reportInfo.ReportName), nameof(reportInfo.ReportName) }
                     };
 
-                    var fileStream = new FileStream(Path.Combine(reportInfo.FolderName, reportInfo.FileName), FileMode.Open, FileAccess.Read);
+                    var fileStream = new FileStream(Path.Combine(reportInfo.FolderName, reportInfo.ReportName), FileMode.Open, FileAccess.Read);
                     var fileContent = new StreamContent(fileStream);
                     fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
-                    multipartContent.Add(fileContent, reportInfo.ReportId, reportInfo.FileName);
+                    multipartContent.Add(fileContent, reportInfo.ReportId, reportInfo.ReportName);
 
                     request.Content = multipartContent;
 
@@ -46,9 +43,14 @@ namespace RDLC.Pages
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            ReportId = reportInfo.ReportId;
-                            ReportName = reportInfo.FileName;
+                            return new OkObjectResult(new
+                            {
+                                reportInfo.ReportId,
+                                reportInfo.ReportName,
+                            });
                         }
+
+                        return new BadRequestObjectResult(await response.Content.ReadAsStringAsync());
                     }
                 }
             }

@@ -4,27 +4,50 @@
     ViewData["Title"] = "Report";
 }
 
-@{
-    var finalUrl = Microsoft.AspNetCore.WebUtilities.QueryHelpers.AddQueryString("http://localhost:5002/ReportViewer.aspx", new Dictionary<string, string>
-    {
-        { "id", Model.ReportId },
-        { "name", Model.ReportName },
-    });
-}
-
 <div class="content content-full">
     <div class="block">
         <div class="block-header border-bottom">
-            <h3 class="block-title">@Model.ReportId</h3>
+            <h3 class="block-title">Report</h3>
+        </div>
+        <div class="block-content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="list-group">
+                        <button type="button" class="list-group-item list-group-item-action" data-report-name="User.rdlc" onclick="selectReport(this)">User</button>
+                        <button type="button" class="list-group-item list-group-item-action" data-report-name="Barcode.rdlc" onclick="selectReport(this)">Barcode</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="block-content">
             <div class="row">
                 <div class="col-sm-12 text-center">
-                    <iframe class="vh-100 w-100" title="Embedded Content" src="@finalUrl" allowfullscreen></iframe>
+                    <iframe class="vh-100 w-100" title="Embedded Content" src="http://localhost:5002/ReportViewer.aspx" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
+
+<script>
+    async function selectReport(element) {
+        const response = await fetch('?handler=SelectReport', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                reportName: element.dataset.reportName,
+            })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+
+            console.log(result);
+        } else {
+            alert('Failed to lock customer state context for this tab.');
+        }
+    }
+</script>
 

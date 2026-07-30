@@ -14,7 +14,8 @@ services.AddSingleton(new AppData());
 services.AddScoped<IReportService, ReportService>();
 
 // Add services to the container.
-services.AddRazorPages();
+services.AddRazorPages()
+    .AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 
