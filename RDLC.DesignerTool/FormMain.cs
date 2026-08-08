@@ -1,5 +1,6 @@
-﻿using RDLC.DesignerTool.Models;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -7,6 +8,8 @@ namespace RDLC.DesignerTool
 {
     public partial class FormMain : Form
     {
+        private readonly HashSet<XmlNode> _trackingNodes = new HashSet<XmlNode>();
+
         public FormMain()
         {
             InitializeComponent();
@@ -57,6 +60,22 @@ namespace RDLC.DesignerTool
             var pageNode = reportNode.SelectSingleNode(XPath.PageNode);
             var pageWidthNode = pageNode.SelectSingleNode(XPath.PageWidthNode);
             var pageHeightNode = pageNode.SelectSingleNode(XPath.PageHeightNode);
+            var leftMarginNode = pageNode.SelectSingleNode(XPath.LeftMarginNode);
+            var rightMarginNode = pageNode.SelectSingleNode(XPath.RightMarginNode);
+            var topMarginNode = pageNode.SelectSingleNode(XPath.TopMarginNode);
+            var bottomMarginNode = pageNode.SelectSingleNode(XPath.BottomMarginNode);
+            var columnSpacingNode = pageNode.SelectSingleNode(XPath.ColumnSpacingNode);
+
+            _trackingNodes.Clear();
+            _trackingNodes.Add(pageWidthNode);
+            _trackingNodes.Add(pageHeightNode);
+            _trackingNodes.Add(leftMarginNode);
+            _trackingNodes.Add(rightMarginNode);
+            _trackingNodes.Add(topMarginNode);
+            _trackingNodes.Add(bottomMarginNode);
+
+            cbbNode.Items.Clear();
+            cbbNode.Items.AddRange(_trackingNodes.Select(x => new ComboBoxItem() { Text = string.Format("{0}[{1}]", x.Name, x.Attributes["name"]), Tag = x }).ToArray());
         }
     }
 
@@ -66,5 +85,16 @@ namespace RDLC.DesignerTool
         public const string PageNode = "//*[local-name()='Page']";
         public const string PageWidthNode = "//*[local-name()='PageWidth']";
         public const string PageHeightNode = "//*[local-name()='PageHeight']";
+        public const string LeftMarginNode = "//*[local-name()='LeftMargin']";
+        public const string RightMarginNode = "//*[local-name()='RightMargin']";
+        public const string TopMarginNode = "//*[local-name()='TopMargin']";
+        public const string BottomMarginNode = "//*[local-name()='BottomMargin']";
+        public const string ColumnSpacingNode = "//*[local-name()='ColumnSpacing']";
+    }
+
+    class ComboBoxItem
+    {
+        public string Text { get; set; }
+        public object Tag { get; set; }
     }
 }
