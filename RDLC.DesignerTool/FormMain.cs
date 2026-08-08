@@ -53,12 +53,18 @@ namespace RDLC.DesignerTool
             var document = new XmlDocument();
             document.Load(fileName);
 
-            var xmlPageNode = document.SelectSingleNode(XPath.PageNode);
+            var reportNode = document.SelectSingleNode(XPath.ReportNode);
+            var pageNode = reportNode.SelectSingleNode(XPath.PageNode);
+            var pageWidthNode = pageNode.SelectSingleNode(XPath.PageWidthNode);
+            var pageHeightNode = pageNode.SelectSingleNode(XPath.PageHeightNode);
         }
     }
 
     static class XPath
     {
+        public const string ReportNode = "//*[local-name()='Report']";
         public const string PageNode = "//*[local-name()='Page']";
+        public const string PageWidthNode = "//*[local-name()='PageWidth']";
+        public const string PageHeightNode = "//*[local-name()='PageHeight']";
     }
 }
