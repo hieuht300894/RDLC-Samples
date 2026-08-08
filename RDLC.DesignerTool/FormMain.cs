@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RDLC.DesignerTool.Models;
+using System;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace RDLC.DesignerTool
 {
@@ -13,7 +15,6 @@ namespace RDLC.DesignerTool
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             lblFileName.Text = "";
-            lblFileName.Tag = "";
 
             using (var dialog = new OpenFileDialog())
             {
@@ -25,7 +26,6 @@ namespace RDLC.DesignerTool
                     try
                     {
                         lblFileName.Text = dialog.FileName;
-                        lblFileName.Tag = dialog.FileName;
                     }
                     catch (Exception ex)
                     {
@@ -33,11 +33,32 @@ namespace RDLC.DesignerTool
                     }
                 }
             }
+
+            if (!string.IsNullOrWhiteSpace(lblFileName.Text))
+            {
+                LoadReportXml(lblFileName.Text);
+            }
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            //Do nothing
+            if (!string.IsNullOrWhiteSpace(lblFileName.Text))
+            {
+                LoadReportXml(lblFileName.Text);
+            }
         }
+
+        private void LoadReportXml(string fileName)
+        {
+            var document = new XmlDocument();
+            document.Load(fileName);
+
+            var xmlPageNode = document.SelectSingleNode(XPath.PageNode);
+        }
+    }
+
+    static class XPath
+    {
+        public const string PageNode = "//*[local-name()='Page']";
     }
 }
