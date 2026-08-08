@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RDLC.DesignerTool
@@ -15,6 +8,36 @@ namespace RDLC.DesignerTool
         public FormMain()
         {
             InitializeComponent();
+        }
+
+        private void btnOpenFile_Click(object sender, EventArgs e)
+        {
+            lblFileName.Text = "";
+            lblFileName.Tag = "";
+
+            using (var dialog = new OpenFileDialog())
+            {
+                dialog.Filter = "RDLC Report Files (*.rdlc)|*.rdlc|All files (*.*)|*.*";
+                dialog.Title = "Select an RDLC Report File";
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        lblFileName.Text = dialog.FileName;
+                        lblFileName.Tag = dialog.FileName;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error loading report: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
