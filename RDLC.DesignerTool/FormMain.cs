@@ -37,7 +37,7 @@ namespace RDLC.DesignerTool
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-
+            //Do nothing
         }
     }
 }
